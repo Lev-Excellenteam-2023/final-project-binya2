@@ -4,6 +4,15 @@ import json
 
 import openai
 
+async def sending_question_to_chat_gpt(presentation_text):
+    # Complete a chat with GPT-3
+    text = presentation_text + "can you summarize for me?"
+    response = await asyncio.get_event_loop().run_in_executor(None, lambda: openai.ChatCompletion.create
+    (model = "gpt-3.5-turbo",
+     messages = [{"role": "user", "content": text}],
+     timeout = 100000 # seconds
+     ))
+    return response.choices[0].message.content
 
 def preparing_for_chat_question(file_path):
 
@@ -30,12 +39,6 @@ async def main():
     with open(f"{file_name}.json", "w") as file_out:
         file_out.write(await chat_gpt_answer(file.PowerPointFile))
     print("You can read the result in the json file located in the folder of the presentation.")
-
-
-
-
-
-
 
 if __name__ == "__main__":
     openai.api_key = ""  # Replace with your API key
