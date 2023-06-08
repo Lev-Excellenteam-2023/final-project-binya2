@@ -4,6 +4,9 @@ import json
 
 import openai
 
+def extract_text_from_slide(slide):
+    return  " ".join([run.text for shape in slide.shapes if shape.has_text_frame for paragraph in shape.text_frame.paragraphs for run in paragraph.runs]).strip()
+
 async def sending_question_to_chat_gpt(presentation_text):
     # Complete a chat with GPT-3
     text = presentation_text + "can you summarize for me?"
