@@ -3,6 +3,7 @@ import asyncio
 import json
 import openai
 from pptx import Presentation
+
 def extract_text_from_slide(slide):
     return  " ".join([run.text for shape in slide.shapes if shape.has_text_frame for paragraph in shape.text_frame.paragraphs for run in paragraph.runs]).strip()
 
@@ -35,7 +36,7 @@ async def chat_gpt_answer(file_path):
         except Exception as e:
             response = f"Error occurred while processing slide {index}. Error message: {str(e)}"
         response_dict[f"response {index}"] = {"text": slide_text, "response": response}
-    return json.dumps(response_dict, indent="\n")  # sending the response_dict as JSON
+    return json.dumps(response_dict, indent="\n")
 
 async def main():
     user_path = argparse.ArgumentParser(description="Extract text from a PowerPoint file")
@@ -47,5 +48,5 @@ async def main():
     print("You can read the result in the json file located in the folder of the presentation.")
 
 if __name__ == "__main__":
-    openai.api_key = ""  # Replace with your API key
+    openai.api_key = "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"  # Replace with your API key
     asyncio.get_event_loop().run_until_complete(main())  # Run the main as async function
