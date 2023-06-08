@@ -1,5 +1,12 @@
 import argparse
+import json
 
+
+async def chat_gpt_answer(file_path):
+
+    response_dict = {}
+
+    return json.dumps(response_dict, indent="\n")
 
 def main():
     user_path = argparse.ArgumentParser(description="Extract text from a PowerPoint file")
