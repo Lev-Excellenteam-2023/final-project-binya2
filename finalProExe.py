@@ -24,7 +24,9 @@ async def main():
     user_path.add_argument("PowerPointFile", type=str, help="Path to the PowerPoint presentation file")
     file = user_path.parse_args()
     file_name = file.PowerPointFile.split("/")[-1].split(".")[0]
-
+    with open(f"{file_name}.json", "w") as file_out:
+        file_out.write(await chat_gpt_answer(file.PowerPointFile))
+    print("You can read the result in the json file located in the folder of the presentation.")
 
 
 
