@@ -9,10 +9,15 @@ def preparing_for_chat_question(file_path):
     return actions
 
 async def chat_gpt_answer(file_path):
-
+    actions = preparing_for_chat_question(file_path)
     response_dict = {}
-
-    return json.dumps(response_dict, indent="\n")
+    for index, slide_text, action in actions:
+        try:
+            response = await action
+        except Exception as e:
+            response = f"Error occurred while processing slide {index}. Error message: {str(e)}"
+        response_dict[f"response {index}"] = {"text": slide_text, "response": response}
+    return json.dumps(response_dict, indent="\n")  # sending the response_dict as JSON
 
 async def main():
     user_path = argparse.ArgumentParser(description="Extract text from a PowerPoint file")
