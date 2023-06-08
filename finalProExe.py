@@ -1,9 +1,8 @@
 import argparse
 import asyncio
 import json
-
 import openai
-
+from pptx import Presentation
 def extract_text_from_slide(slide):
     return  " ".join([run.text for shape in slide.shapes if shape.has_text_frame for paragraph in shape.text_frame.paragraphs for run in paragraph.runs]).strip()
 
@@ -18,9 +17,13 @@ async def sending_question_to_chat_gpt(presentation_text):
     return response.choices[0].message.content
 
 def preparing_for_chat_question(file_path):
-
+    pp_file = Presentation(file_path)
     actions = []
-
+    for index, slide in enumerate(pp_file.slides, start=1):
+        slide_text = extract_text_from_slide(slide)
+        if slide_text:
+            action = asyncio.create_task(sending_question_to_chat_gpt(slide_text))
+            actions.append((index, slide_text, action))
     return actions
 
 async def chat_gpt_answer(file_path):
