@@ -1,5 +1,8 @@
 import argparse
+import asyncio
 import json
+
+import openai
 
 
 def preparing_for_chat_question(file_path):
@@ -35,4 +38,5 @@ async def main():
 
 
 if __name__ == "__main__":
-    main()
+    openai.api_key = ""  # Replace with your API key
+    asyncio.get_event_loop().run_until_complete(main())  # Run the main as async function
