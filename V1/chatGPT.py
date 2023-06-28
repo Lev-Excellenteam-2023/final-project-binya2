@@ -5,6 +5,10 @@ from dotenv import load_dotenv
 load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
+
+"""
+This function gets a list of slides and a question and returns a dictionary with the slide text and the response from GPT-3.
+"""
 async def get_chat_response(slides_text,question)->dict:
     response_dict = {}
     response = [None] * (len(slides_text) + 1)
@@ -15,6 +19,10 @@ async def get_chat_response(slides_text,question)->dict:
         response_dict[f"response {index}"] = {"text": slide_text, "response": res}
     return response_dict
 
+
+"""
+This function gets a text and a question and returns the response from GPT-3.
+"""
 async def sending_question_to_chat_gpt(presentation_text, question)->str:
     try:
         # Complete a chat with GPT-3
