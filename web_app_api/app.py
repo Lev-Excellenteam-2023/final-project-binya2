@@ -2,11 +2,12 @@ import os
 import datetime
 import uuid
 from flask import Flask, request, jsonify, json
-from werkzeug.utils import secure_filename
+from dotenv import load_dotenv
 
+load_dotenv()
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = r"C:\exselentim\python\final-project-binya2\file_pro\uploads"
-app.config['OUTPUTS_FOLDER'] = r"C:\exselentim\python\final-project-binya2\file_pro\outputs"
+app.config['UPLOAD_FOLDER'] = os.getenv('UPLOAD_FOLDER')
+app.config['OUTPUTS_FOLDER'] =os.getenv('OUTPUTS_FOLDER')
 
 """
     This is a simple web app that allows users to upload files and get explanations for them.

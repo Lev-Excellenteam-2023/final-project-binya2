@@ -5,20 +5,24 @@ import time
 import chatGPT
 import makeJson
 import ppFile
-UPLOADS_FOLDER = r"C:\exselentim\python\final-project-binya2\file_pro\uploads"
-OUTPUTS_FOLDER = r"C:\exselentim\python\final-project-binya2\file_pro\outputs"
+from dotenv import load_dotenv
+
+load_dotenv()
+UPLOADS_FOLDER = os.getenv('UPLOAD_FOLDER')
+OUTPUTS_FOLDER = os.getenv('OUTPUTS_FOLDER')
 # Configure the logger
 logging.basicConfig(filename='my_logs.log', filemode='w', level=logging.DEBUG,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 # Create the logger object
 logger = logging.getLogger('my_logger')
 
-"""
-This function gets a path to a presentation and returns a dictionary with the slide text and the response from GPT-3.
-"""
+
 
 
 async def handling_file(file_path):
+    """
+    This function gets a path to a presentation and returns a dictionary with the slide text and the response from GPT-3.
+    """
     # path_file = ppFile.extract_path_from_user()
     slides_text = ppFile.extext_text_from_pp_file(file_path)
     response_dict = await chatGPT.get_chat_response(slides_text, "What is the main idea of this slide?")

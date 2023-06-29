@@ -26,16 +26,11 @@ def get_file_status(uid, base_url):
     response = requests.get(url)
     response.raise_for_status()
     json_data = response.json()
-
-    status = json_data['status']
-    filename = json_data['filename']
-    timestamp = json_data['timestamp']
-    explanation = json_data['explanation']
     return {
-        'status': status,
-        'filename': filename,
-        'timestamp': timestamp,
-        'explanation': explanation
+        'status': json_data['status'],
+        'filename': json_data['filename'],
+        'timestamp': datetime.fromisoformat(str(json_data['timestamp'])),
+        'explanation': json_data['explanation']
     }
 
 
@@ -47,7 +42,7 @@ def is_done(status) -> bool:
 
 
 if __name__ == "__main__":
-    base_url = r"http://127.0.0.1:5000"
+    base_url = os.getenv("MY_URL")
     file_path = r"C:\exselentim\python\final-project-binya2\Tests.pptx"
     uid = upload_file(file_path, base_url)
     while True:
