@@ -5,9 +5,8 @@ import time
 import chatGPT
 import makeJson
 import ppFile
-
-UPLOADS_FOLDER = r"C:\exselentim\python\file_pro\uploads"
-OUTPUTS_FOLDER = r"C:\exselentim\python\file_pro\outputs"
+UPLOADS_FOLDER = r"C:\exselentim\python\final-project-binya2\file_pro\uploads"
+OUTPUTS_FOLDER = r"C:\exselentim\python\final-project-binya2\file_pro\outputs"
 # Configure the logger
 logging.basicConfig(filename='my_logs.log', filemode='w', level=logging.DEBUG,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -28,12 +27,12 @@ async def handling_file(file_path):
     return status
 
 
-async def main():
+async def main_Explainer():
     try:
-        if not os.path.exists("UPLOAD_FOLDER"):
-            os.makedirs("UPLOAD_FOLDER")
-        if not os.path.exists("OUTPUTS_FOLDER"):
-            os.makedirs("OUTPUTS_FOLDER")
+        if not os.path.exists(UPLOADS_FOLDER):
+            os.makedirs(UPLOADS_FOLDER)
+        if not os.path.exists(OUTPUTS_FOLDER):
+            os.makedirs(OUTPUTS_FOLDER)
         files_after_processing = []
         current_time = time.time()
         while True:
@@ -54,4 +53,4 @@ async def main():
 
 
 if __name__ == "__main__":
-    asyncio.get_event_loop().run_until_complete(main())  # Run the main as async function
+    asyncio.get_event_loop().run_until_complete(main_Explainer())  # Run the main as async function
