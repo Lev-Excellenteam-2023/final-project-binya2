@@ -7,13 +7,14 @@ from dotenv import load_dotenv
 load_dotenv()
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = os.getenv('UPLOAD_FOLDER')
-app.config['OUTPUTS_FOLDER'] =os.getenv('OUTPUTS_FOLDER')
+app.config['OUTPUTS_FOLDER'] = os.getenv('OUTPUTS_FOLDER')
 
-"""
-    This is a simple web app that allows users to upload files and get explanations for them.
-"""
+
 @app.route('/upload', methods=['POST'])
 def upload() -> jsonify:
+    """
+        This is a simple web app that allows users to upload files and get explanations for them.
+    """
     file = request.files['file']
     uid = str(uuid.uuid4())
     timestamp = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
@@ -22,11 +23,12 @@ def upload() -> jsonify:
 
     return jsonify({'uid': uid})
 
-"""
-    This endpoint returns the status of a file.
-"""
+
 @app.route('/status/<uid>', methods=['GET'])
 def status(uid) -> jsonify:
+    """
+        This endpoint returns the status of a file.
+    """
     matching_files = [file for file in os.listdir(app.config['UPLOAD_FOLDER']) if uid in file]
     if len(matching_files) == 0:
         return jsonify({'status': 'not found', 'filename': None, 'timestamp': None, 'explanation': None}), 404

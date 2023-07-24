@@ -40,8 +40,8 @@ async def main_Explainer():
         files_after_processing = []
         current_time = time.time()
         while True:
-            files_before_processing = [file for file in os.listdir(UPLOADS_FOLDER) if
-                                       file.endswith(".pptx") and file not in files_after_processing]
+            files_before_processing = [file for file in os.listdir(UPLOADS_FOLDER)
+                                       if file.endswith(".pptx") and file not in files_after_processing]
             for file in files_before_processing:
                 logger.info(f"Processing file: {file}  in: {time.ctime(current_time)}")
                 if await handling_file(os.path.join(UPLOADS_FOLDER, file)):
