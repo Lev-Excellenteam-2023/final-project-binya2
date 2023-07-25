@@ -8,16 +8,17 @@ import ppFile
 from dotenv import load_dotenv
 
 load_dotenv()
-UPLOADS_FOLDER = os.getenv('UPLOAD_FOLDER')
-OUTPUTS_FOLDER = os.getenv('OUTPUTS_FOLDER')
+
+# UPLOADS_FOLDER = os.getenv("UPLOAD_FOLDER")
+# OUTPUTS_FOLDER = os.getenv("OUTPUT_FOLDER")
+UPLOADS_FOLDER = r"C:\exselentim\python\final-project-binya2\file_pro\uploads"
+OUTPUTS_FOLDER = r"C:\exselentim\python\final-project-binya2\file_pro\outputs"
+
 # Configure the logger
 logging.basicConfig(filename='my_logs.log', filemode='w', level=logging.DEBUG,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 # Create the logger object
 logger = logging.getLogger('my_logger')
-
-
-
 
 async def handling_file(file_path):
     """
