@@ -3,7 +3,6 @@ import argparse
 
 
 
-
 def extract_text_from_slide(slide) -> str:
     """
         This module is used to extract text from a PowerPoint file.

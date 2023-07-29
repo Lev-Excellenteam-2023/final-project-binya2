@@ -4,31 +4,27 @@ import os
 from datetime import datetime
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-import chatGPT
-import makeJson
-import ppFile
 from dotenv import load_dotenv
 from Database.dbManagement import Status, Upload, Base
+from Explainer import ppFile, chatGPT, makeJson
 
 load_dotenv()
 
-
-# UPLOADS_FOLDER = r"C:\exselentim\python\final-project-binya2\file_pro\uploads"
-# OUTPUTS_FOLDER = r"C:\exselentim\python\final-project-binya2\file_pro\outputs"
-UPLOADS_FOLDER = os.getenv("UPLOAD_FOLDER")
-OUTPUTS_FOLDER = os.getenv("OUTPUT_FOLDER")
+UPLOADS_FOLDER = r"C:\exselentim\python\final-project-binya2\file_pro\uploads"
+OUTPUTS_FOLDER = r"C:\exselentim\python\final-project-binya2\file_pro\outputs"
+# UPLOADS_FOLDER = os.getenv("UPLOAD_FOLDER")
+# OUTPUTS_FOLDER = os.getenv("OUTPUT_FOLDER")
 
 # Configure the logger
 logging.basicConfig(filename='my_logs.log', filemode='w', level=logging.DEBUG,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-logger = logging.getLogger('my_logger')
+logger = logging.getLogger('explainer_logger')
 
 
 async def handling_file(file_path) -> bool:
     """
     This function gets a path to a presentation and returns a dictionary with the slide text and the response from GPT-3.
     """
-    # path_file = ppFile.extract_path_from_user()
     slides_text = ppFile.extext_text_from_pp_file(file_path)
     response_dict = await chatGPT.get_chat_response(slides_text, "What is the main idea of this slide?")
     file_path = os.path.join(OUTPUTS_FOLDER, file_path.split("\\")[-1])
@@ -40,19 +36,19 @@ async def main_Explainer():
 
     try:
         while True:
-            engine = create_engine('sqlite:///../Database/db/mysqlite.sqlitedb', echo=True)
+            engine = create_engine('sqlite:///Database/db/mysqlite.db')
             Base.metadata.create_all(engine)
             Session = sessionmaker(bind=engine)
             session = Session()
-
 
             files_before_processing = session.query(Upload).filter_by(status=Status.PENDING).all()
 
             for file in files_before_processing:
                 file.status = Status.PROCESSING
                 logger.info(f"Processing file: {file}  in: {datetime.now()}")
-                if await handling_file(os.path.join(UPLOADS_FOLDER, file)):
+                if await handling_file(os.path.join(UPLOADS_FOLDER, file.uid + ".pptx")):
                     file.status = Status.DONE
+
                     logger.info(f"Finished processing file: {file} in: {datetime.now()}")
                 else:
                     file.status = Status.FAILED
