@@ -2,14 +2,11 @@ import asyncio
 import logging
 import os
 from datetime import datetime
-
-from dotenv import load_dotenv
+from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-
-import chatGPT
-import makeJson
-import ppFile
-from db.dbManagement import *
+from dotenv import load_dotenv
+from Database.dbManagement import Status, Upload, Base
+from Explainer import ppFile, chatGPT, makeJson
 
 load_dotenv()
 
@@ -37,12 +34,15 @@ async def handling_file(file_path) -> bool:
 
 
 async def main_Explainer():
+
     try:
         while True:
+            engine = create_engine('sqlite:///../Database/db/mysqlite.sqlitedb')
             Base.metadata.create_all(engine)
             Session = sessionmaker(bind=engine)
             session = Session()
-            asyncio.get_event_loop().run_until_complete(main_Explainer())
+
+
             files_before_processing = session.query(Upload).filter_by(status=Status.PENDING).all()
 
             for file in files_before_processing:
@@ -55,6 +55,7 @@ async def main_Explainer():
                     file.status = Status.FAILED
                     logger.error(f"Error occurred while processing file: {file} in: {datetime.now()}")
                 file.finish_time = datetime.now()
+            session.commit()
             session.close()
             await asyncio.sleep(10)
     except Exception as e:
@@ -67,4 +68,4 @@ if __name__ == "__main__":
         os.makedirs(UPLOADS_FOLDER)
     if not os.path.exists(OUTPUTS_FOLDER):
         os.makedirs(OUTPUTS_FOLDER)
-    engine = create_engine('sqlite:///example.db')  # Run the main as async function
+    asyncio.get_event_loop().run_until_complete(main_Explainer())  # Run the main as async function

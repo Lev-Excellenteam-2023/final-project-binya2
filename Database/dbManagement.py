@@ -6,6 +6,7 @@ from sqlalchemy import create_engine, ForeignKey, select
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, Session, Mapped, mapped_column
 from enum import Enum as myEnum
+
 Base = declarative_base()
 
 
