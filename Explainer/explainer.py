@@ -4,16 +4,19 @@ import os
 from datetime import datetime
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+import chatGPT
+import makeJson
+import ppFile
 from dotenv import load_dotenv
 from Database.dbManagement import Status, Upload, Base
-from Explainer import ppFile, chatGPT, makeJson
 
 load_dotenv()
 
-# UPLOADS_FOLDER = os.getenv("UPLOAD_FOLDER")
-# OUTPUTS_FOLDER = os.getenv("OUTPUT_FOLDER")
-UPLOADS_FOLDER = r"C:\exselentim\python\final-project-binya2\file_pro\uploads"
-OUTPUTS_FOLDER = r"C:\exselentim\python\final-project-binya2\file_pro\outputs"
+
+# UPLOADS_FOLDER = r"C:\exselentim\python\final-project-binya2\file_pro\uploads"
+# OUTPUTS_FOLDER = r"C:\exselentim\python\final-project-binya2\file_pro\outputs"
+UPLOADS_FOLDER = os.getenv("UPLOAD_FOLDER")
+OUTPUTS_FOLDER = os.getenv("OUTPUT_FOLDER")
 
 # Configure the logger
 logging.basicConfig(filename='my_logs.log', filemode='w', level=logging.DEBUG,
@@ -37,7 +40,7 @@ async def main_Explainer():
 
     try:
         while True:
-            engine = create_engine('sqlite:///../Database/db/mysqlite.sqlitedb')
+            engine = create_engine('sqlite:///../Database/db/mysqlite.sqlitedb', echo=True)
             Base.metadata.create_all(engine)
             Session = sessionmaker(bind=engine)
             session = Session()

@@ -1,5 +1,4 @@
 import datetime
-import uuid
 from typing import List
 
 from sqlalchemy import create_engine, ForeignKey, select
