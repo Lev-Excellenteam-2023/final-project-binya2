@@ -31,6 +31,21 @@ async def handling_file(file_path):
     return status
 
 
+def filter_files(file_list, extension, excluded_files):
+    filtered_files = []
+    for file in file_list:
+        if file.endswith(extension) and file not in excluded_files:
+            filtered_files.append(file)
+    return filtered_files
+
+
+async def process_file(file):
+    logger.info(f"Processing file: {file} in: {time.ctime()}")
+    if await handling_file(os.path.join(UPLOADS_FOLDER, file)):
+        files_after_processing.append(file)
+        logger.info(f"Finished processing file: {file} in: {time.ctime()}")
+
+
 async def main_Explainer():
     try:
         if not os.path.exists(UPLOADS_FOLDER):
@@ -39,15 +54,12 @@ async def main_Explainer():
             os.makedirs(OUTPUTS_FOLDER)
         files_after_processing = []
         current_time = time.time()
-        while True:
-            files_before_processing = [file for file in os.listdir(UPLOADS_FOLDER) if
-                                       file.endswith(".pptx") and file not in files_after_processing]
-            for file in files_before_processing:
-                logger.info(f"Processing file: {file}  in: {time.ctime(current_time)}")
-                if await handling_file(os.path.join(UPLOADS_FOLDER, file)):
-                    files_after_processing.append(file)
-                    logger.info(f"Finished processing file: {file} in: {time.ctime(current_time)}")
-
+       while True:
+        files_to_process = filter_files(os.listdir(UPLOADS_FOLDER), ".pptx", files_after_processing)
+        
+        for file in files_to_process:
+          logger.info(f"Processing file: {file} in: {time.ctime()}")
+            await process_file(file)
             await asyncio.sleep(10)
     except Exception as e:
         print(f"Error occurred while processing file. Error message: {str(e)}")
