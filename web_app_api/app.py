@@ -22,14 +22,22 @@ def upload() -> jsonify:
 
     return jsonify({'uid': uid})
 
-"""
-    This endpoint returns the status of a file.
-"""
+def get_explanation(output_path):
+    with open(output_path, 'r') as output_file:
+        explanation = json.load(output_file)
+    return explanation
+
+
+
 @app.route('/status/<uid>', methods=['GET'])
 def status(uid) -> jsonify:
+"""
+This endpoint returns the status of a file.
+"""
+
     matching_files = [file for file in os.listdir(app.config['UPLOAD_FOLDER']) if uid in file]
     if len(matching_files) == 0:
-        return jsonify({'status': 'not found', 'filename': None, 'timestamp': None, 'explanation': None}), 404
+        res =  jsonify({'status': 'not found', 'filename': None, 'timestamp': None, 'explanation': None}), 404
     original_filename = ""
     timestamp = ""
     for filename in os.listdir(app.config['OUTPUTS_FOLDER']):
@@ -37,11 +45,11 @@ def status(uid) -> jsonify:
             output_path = os.path.join(app.config['OUTPUTS_FOLDER'], filename)
             original_filename, timestamp, _ = filename.split('_', 2)
             if os.path.exists(output_path):
-                with open(output_path, 'r') as output_file:
-                    explanation = json.load(output_file)
-                return jsonify({'status': 'done', 'filename': original_filename, 'timestamp': timestamp,
+                explanation = get_explanation(output_path)
+                res = jsonify({'status': 'done', 'filename': original_filename, 'timestamp': timestamp,
                                 'explanation': explanation}), 200
-    return jsonify({'status': 'pending', 'filename': original_filename, 'timestamp': timestamp, 'explanation': None}), 200
+    res = jsonify({'status': 'pending', 'filename': original_filename, 'timestamp': timestamp, 'explanation': None}), 200
+    return res
 
 
 if __name__ == '_main_':
