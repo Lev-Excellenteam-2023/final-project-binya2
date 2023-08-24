@@ -6,11 +6,27 @@ import argparse
 
 def extract_text_from_slide(slide) -> str:
     """
-        This module is used to extract text from a PowerPoint file.
+    This module is used to extract text from a PowerPoint file.
     """
-    return " ".join([run.text for shape in slide.shapes if shape.has_text_frame
-                     for paragraph in shape.text_frame.paragraphs
-                     for run in paragraph.runs]).strip()
+    text = []
+    for shape in slide.shapes:
+        if shape.has_text_frame:
+            shape_text = extract_text_from_text_frame(shape.text_frame)
+            text.append(shape_text)
+    return " ".join(text).strip()
+
+def extract_text_from_text_frame(text_frame) -> str:
+    text = []
+    for paragraph in text_frame.paragraphs:
+        paragraph_text = extract_text_from_paragraph(paragraph)
+        text.append(paragraph_text)
+    return " ".join(text)
+
+def extract_text_from_paragraph(paragraph) -> str:
+    text = []
+    for run in paragraph.runs:
+        text.append(run.text)
+    return " ".join(text)
 
 
 
